@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>al5d_simulation</name>
+  <version>0.0.0</version>
+  <description>al5d_simulation</description>
+  <maintainer email="Todo@Todo.nl">Rene</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>joint_state_publisher</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>std_msgs</depend>
+  <depend>rviz</depend>
+  <depend>controller_manager</depend>
+  <depend>rqt_gui</depend>
+  <depend>effort_controllers</depend>
+  <depend>xacro</depend>
+
+
+  <export>
+  </export>
+
+</package>

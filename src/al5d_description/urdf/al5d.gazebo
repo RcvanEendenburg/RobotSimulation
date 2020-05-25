@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<robot>
+
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/al5d</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+
+  <!-- base -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- turret -->
+  <gazebo reference="turret">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- upper arm -->
+  <gazebo reference="upperarm">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <!-- forearm -->
+  <gazebo reference="forearm">
+    <material>Gazebo/White</material>
+  </gazebo>
+
+    <!-- wrist -->
+  <gazebo reference="wrist">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+    <!-- hand -->
+  <gazebo reference="hand">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+    <!-- gripper_left -->
+  <gazebo reference="gripper_left">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+    <!-- gripper_right -->
+  <gazebo reference="gripper_right">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+
+
+</robot>
