@@ -1,6 +1,12 @@
 <launch>
-<arg name="model" default="$(find al5d_simulation)/urdf/al5d.xacro"/>
-  <param name="robot_description" textfile="$(find al5d_simulation)/urdf/al5d.urdf"/>
+    <arg name="robot_name" default="al5d"/>
+    <arg name="robot_pose" default="2 2 0"/>
+
+
+
+    <param name="al5d/robot_description" command="$(find xacro)/xacro '$(find al5d_simulation)/urdf/al5d.xacro' name:=$(arg robot_name) pose:='$(arg robot_pose)'" />
+
+<param name="robot_description" textfile="$(find al5d_simulation)/urdf/al5d.urdf"/>
 
   <node pkg="al5d_simulation" name="al5d_simulation" type="al5d_simulation_node" args="$(find al5d_simulation)/urdf/al5d.urdf"/>
 

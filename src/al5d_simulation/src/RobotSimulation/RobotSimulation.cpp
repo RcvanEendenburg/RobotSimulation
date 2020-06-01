@@ -5,7 +5,7 @@
 namespace RobotSimulation {
 
     Al5dSimulation::Al5dSimulation(std::string urdfFile) {
-        model.initFile(urdfFile);
+        model.initParam("al5d/robot_description");
         std::string ns = "/joint_states";
         servos.push_back(DegreeOfFreedom(model.getJoint("base_link2turret")));
         servos.push_back(DegreeOfFreedom(model.getJoint("turret2upperarm")));

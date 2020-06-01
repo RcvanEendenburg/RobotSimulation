@@ -4,51 +4,82 @@
   <!-- ros_control plugin -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/al5d</robotNamespace>
+      <robotNamespace>$(arg name)</robotNamespace>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
 
-  <!-- base -->
+  <!-- Link1 -->
   <gazebo reference="base_link">
-    <material>Gazebo/Black</material>
+    <material>Gazebo/Gold</material> 
+    <selfCollide>true</selfCollide>
   </gazebo>
 
-  <!-- turret -->
+  <!-- Link2 -->
   <gazebo reference="turret">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <!-- upper arm -->
+  <!-- Link3 -->
   <gazebo reference="upperarm">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+     <selfCollide>true</selfCollide>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <!-- forearm -->
   <gazebo reference="forearm">
-    <material>Gazebo/White</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+    <material>Gazebo/BumpyMetal</material>
   </gazebo>
 
-    <!-- wrist -->
   <gazebo reference="wrist">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+     <selfCollide>true</selfCollide>
     <material>Gazebo/Black</material>
   </gazebo>
 
-    <!-- hand -->
   <gazebo reference="hand">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+     <selfCollide>true</selfCollide>
     <material>Gazebo/Black</material>
   </gazebo>
 
-    <!-- gripper_left -->
   <gazebo reference="gripper_left">
-    <material>Gazebo/Grey</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+     <selfCollide>true</selfCollide>
+    <material>Gazebo/BumpyMetal</material>
   </gazebo>
 
-    <!-- gripper_right -->
   <gazebo reference="gripper_right">
-    <material>Gazebo/Grey</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+     <selfCollide>true</selfCollide>
+    <material>Gazebo/BumpyMetal</material>
   </gazebo>
 
+  <gazebo reference="base_link2turret">
+    <fudgeFactor value="0"/>
+  </gazebo>
 
+  <gazebo reference="turret2upperarm">
+    <fudgeFactor value="0"/>
+  </gazebo>
+
+  <gazebo reference="upperarm2forearm">
+    <fudgeFactor value="0"/>
+  </gazebo>
+
+  <gazebo reference="forearm2wrist">
+    <fudgeFactor value="0"/>
+  </gazebo>
 
 </robot>
