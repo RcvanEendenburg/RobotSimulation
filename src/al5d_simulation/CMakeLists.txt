@@ -11,12 +11,14 @@ find_package(catkin REQUIRED COMPONENTS
 		rospy
 		std_msgs
 		geometry_msgs
+		sensor_msgs
 		message_generation)
 
 ## Importing catkin packages
 catkin_package(
   CATKIN_DEPENDS     
 	std_msgs
+		sensor_msgs
 )
 
 ## Including directories and adding source files to be build
@@ -26,5 +28,4 @@ file(GLOB_RECURSE SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*/*.cpp")
 ## Adding node executable
 add_executable(${PROJECT_NAME}_node src/main.cpp ${SOURCE_FILES})
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-#target_link_libraries(${PROJECT_NAME}_node virtual_robot_controller ${catkin_LIBRARIES})
 

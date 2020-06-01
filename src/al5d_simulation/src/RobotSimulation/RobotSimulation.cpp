@@ -5,17 +5,22 @@
 
 namespace RobotSimulation {
 
-    Al5dSimulation::Al5dSimulation() {
-      servos.push_back(DegreeOfFreedom(model.getJoint("base_link2turret"), ns));
-      servos.push_back(DegreeOfFreedom(model.getJoint("turret2upperarm"), ns));
-      servos.push_back(DegreeOfFreedom(model.getJoint("upperarm2forearm"), ns));
-      servos.push_back(DegreeOfFreedom(model.getJoint("forearm2wrist"), ns));
-      servos.push_back(DegreeOfFreedom(model.getJoint("wrist2hand"), ns));
-      servos.push_back(DegreeOfFreedom(model.getJoint("gripper_left2hand"), ns));
-      servos.push_back(DegreeOfFreedom(model.getJoint("gripper_right2hand"), ns));
+    Al5dSimulation::Al5dSimulation(std::string urdfFile) {
+        model.initFile(urdfFile);
+        std::string ns = "/joint_states";
+      servos.push_back(DegreeOfFreedom(model.getJoint("base_link2turret")));
+      servos.push_back(DegreeOfFreedom(model.getJoint("turret2upperarm")));
+      servos.push_back(DegreeOfFreedom(model.getJoint("upperarm2forearm")));
+      servos.push_back(DegreeOfFreedom(model.getJoint("forearm2wrist")));
+      servos.push_back(DegreeOfFreedom(model.getJoint("wrist2hand")));
+      servos.push_back(DegreeOfFreedom(model.getJoint("gripper_left2hand")));
+      servos.push_back(DegreeOfFreedom(model.getJoint("gripper_right2hand")));
+      statePublisher.Initialize( ns);
+      statePublisher.StartPublishing();
     }
 
     Al5dSimulation::~Al5dSimulation() {
+        statePublisher.StopPublishing();
     }
 
     void Al5dSimulation::handleRequest( std_msgs::String::ConstPtr& msg) {

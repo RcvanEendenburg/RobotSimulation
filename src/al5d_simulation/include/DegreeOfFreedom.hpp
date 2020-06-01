@@ -7,9 +7,6 @@
 #include "urdf/model.h"
 #include <string>
 
-#include <sensor_msgs/JointState.h>
-#include <tf/transform_broadcaster.h>
-
 #define NOTSET -1
 #define UPDATE_RATE 50// Publish rate of updates in Hz
 
@@ -26,7 +23,7 @@ namespace RobotSimulation {
          * @param jointSharedPtr pointer to the joint in the urdf model
          * @param aNamespace the robotname namespace
          */
-        DegreeOfFreedom(urdf::JointConstSharedPtr jointSharedPtr, const std::string &aNamespace);
+        DegreeOfFreedom(urdf::JointConstSharedPtr jointSharedPtr);
 
         /**
          * @brief function that starts the position updating thread
@@ -67,6 +64,8 @@ namespace RobotSimulation {
 
         bool isMoving() const;
 
+        std::string getServoName() const;
+
     private:
         /**
          * @author Rene van Eendenburg
@@ -93,19 +92,11 @@ namespace RobotSimulation {
 
         /**
          * @author Rene van Eendenburg
-         * Converts pos from PWM/degrees to radials by using toRadial and publishes this too gazebo.
-         * @param pos in PWM/degrees
-         */
-        void setServo(double pos);
-
-        /**
-         * @author Rene van Eendenburg
          * checks set variables and determines which to use. Then updates the servo for every update tick
          */
         void updateServo();
 
         std::string servoName;
-        std::string rosNamespace;
         double currentPos;
         double targetPos;
         double speed;
@@ -114,8 +105,6 @@ namespace RobotSimulation {
         const double maxRad;
         bool updateReceived;
         bool moving;
-        ros::NodeHandle n;
-        ros::Publisher jointPub;
         ros::Rate rate;
         static long cmdTime;
     };

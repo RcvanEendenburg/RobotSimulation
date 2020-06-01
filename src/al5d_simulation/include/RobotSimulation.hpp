@@ -3,6 +3,7 @@
 
 #include "std_msgs/String.h"
 #include "DegreeOfFreedom.hpp"
+#include "StatePublisher.h"
 #include <SSC32UCommand.hpp>
 #include <ros/ros.h>
 #include <memory>
@@ -12,7 +13,7 @@ namespace RobotSimulation {
 
     class Al5dSimulation {
     public:
-        Al5dSimulation();
+        explicit Al5dSimulation(std::string urdfFile);
 
         virtual ~Al5dSimulation();
 
@@ -78,10 +79,12 @@ namespace RobotSimulation {
 
         ros::NodeHandle n;
         ros::Subscriber sub;
+        StatePublisher statePublisher = StatePublisher(servos);
         const uint16_t servoMin[7] = {2500, 500, 1950, 500, 2650, 2500, 500};
         const uint16_t servoMax[7] = {500, 1950, 500, 2500, 500, 500, 2500};
         const short gripperANr = 5;
         const short gripperBNr = 6;
+        urdf::Model model;
         std::vector<DegreeOfFreedom> servos;
     };
 }

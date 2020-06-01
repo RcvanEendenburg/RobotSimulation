@@ -4,9 +4,8 @@
 namespace RobotSimulation {
     long DegreeOfFreedom::cmdTime = NOTSET;
 
-    DegreeOfFreedom::DegreeOfFreedom(urdf::JointConstSharedPtr jointSharedPtr, const std::string &aNamespace)
+    DegreeOfFreedom::DegreeOfFreedom(urdf::JointConstSharedPtr jointSharedPtr)
             : servoName(jointSharedPtr->name),
-              rosNamespace(aNamespace),
               currentPos(0),
               targetPos(0),
               speed(0),
@@ -17,12 +16,6 @@ namespace RobotSimulation {
               moving(false),
               rate(UPDATE_RATE) {
         speed = maxSpeed;
-        if (servoName == "gripper_left2hand" || servoName == "gripper_right2hand") {
-            jointPub = n.advertise<std_msgs::Float64>(rosNamespace + "/" + servoName + "_controller/command", 100);
-        } else {
-            jointPub = n.advertise<std_msgs::Float64>(rosNamespace + "/" + servoName + "_position_controller/command",
-                                                      100);
-        }
     }
 
     double DegreeOfFreedom::stepsToTargetTime() const {
@@ -76,22 +69,14 @@ namespace RobotSimulation {
         while (!updateReceived)// as long we don't receive a new update. stay in this loop.
         {
             if (std::fabs(targetPos - currentPos) <= diff) {
-                setServo(targetPos);// set servo to target position.
                 currentPos = targetPos;
                 break;
             }
 
             currentPos += step;
-            setServo(currentPos);
             rate.sleep();
         }
         moving = false;
-    }
-
-    void DegreeOfFreedom::setServo(double pos) {
-        std_msgs::Float64 msg;
-        msg.data = pos;
-        jointPub.publish(msg);
     }
 
     void DegreeOfFreedom::setSpeed(double aspeed) {
@@ -147,5 +132,10 @@ namespace RobotSimulation {
 
     double DegreeOfFreedom::getTime() {
         return cmdTime;
+    }
+
+    std::string DegreeOfFreedom::getServoName() const
+    {
+        return servoName;
     }
 }
