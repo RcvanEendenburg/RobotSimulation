@@ -1,0 +1,13 @@
+<launch>
+<arg name="model" default="$(find al5d_simulation)/urdf/al5d.xacro"/>
+  <param name="robot_description" textfile="$(find al5d_simulation)/urdf/al5d.urdf"/>
+
+  <node pkg="al5d_simulation" name="al5d_simulation" type="al5d_simulation_node" args="$(find al5d_simulation)/urdf/al5d.urdf"/>
+
+  <!-- Combine joint values -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+
+  <!-- Show in Rviz   -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find al5d_simulation)/launch/al5d.rviz"/>
+
+</launch>

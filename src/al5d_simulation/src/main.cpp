@@ -8,6 +8,8 @@ int main(int argc, char **argv)
 
     const std::string defaultRequestTopic = "SSC32U_request_topic";
     const std::string defaultResponseTopic = "SSC32U_response_topic";
+    ROS_DEBUG_STREAM("Starting Al5d_simulation with file:");
+    ROS_DEBUG_STREAM(argv[0]);
 
     if(argv[0]) {
         RobotSimulation::Al5dSimulation al5dSim = RobotSimulation::Al5dSimulation(argv[0]);
