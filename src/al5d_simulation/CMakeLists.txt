@@ -12,13 +12,16 @@ find_package(catkin REQUIRED COMPONENTS
 		std_msgs
 		geometry_msgs
 		sensor_msgs
-		message_generation)
+		message_generation
+		tf
+		urdf)
 
 ## Importing catkin packages
 catkin_package(
-  CATKIN_DEPENDS     
-	std_msgs
-		sensor_msgs
+		INCLUDE_DIRS include
+		LIBRARIES ${PROJECT_NAME}
+		CATKIN_DEPENDS roscpp rospy std_msgs message_runtime sensor_msgs urdf
+		DEPENDS system_lib message_runtime
 )
 
 ## Including directories and adding source files to be build
@@ -27,5 +30,11 @@ file(GLOB_RECURSE SOURCE_FILES "${PROJECT_SOURCE_DIR}/src/*/*.cpp")
 
 ## Adding node executable
 add_executable(${PROJECT_NAME}_node src/main.cpp ${SOURCE_FILES})
+
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+
+
+target_link_libraries(${PROJECT_NAME}_node
+		${catkin_LIBRARIES}
+		)

@@ -27,7 +27,7 @@ namespace RobotSimulation {
          *
          * @param SSC32U request
          */
-        void handleRequest(std_msgs::String::ConstPtr& msg);
+        void handleRequest(const std_msgs::String::ConstPtr& msg);
 
         /**
          * @brief This function maps input_val values to radial based on min and max angle
