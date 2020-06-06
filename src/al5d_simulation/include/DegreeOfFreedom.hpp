@@ -6,6 +6,7 @@
 #include "std_msgs/String.h"
 #include "urdf/model.h"
 #include <string>
+#include <mutex>
 
 #define NOTSET -1
 #define UPDATE_RATE 50// Publish rate of updates in Hz
@@ -14,7 +15,7 @@ namespace RobotSimulation {
 /**
  * @brief Each degree of freedom has its own characteristics (such as speed, current position)
  */
-    class DegreeOfFreedom {
+    class DegreeOfFreedom{
     public:
         /**
          * @brief Construct a new Degree Of Freedom object
@@ -25,6 +26,10 @@ namespace RobotSimulation {
          */
         DegreeOfFreedom(urdf::JointConstSharedPtr jointSharedPtr);
 
+        virtual ~DegreeOfFreedom() = default;
+
+     //   DegreeOfFreedom& operator=(const DegreeOfFreedom& s);
+
         /**
          * @brief function that starts the position updating thread
          * @author Rene van Eendenburg
@@ -32,7 +37,7 @@ namespace RobotSimulation {
         void startUpdateThread();
 
         /**
-         * @brief function that notifys a servo its position is about to change
+         * @brief function that notifies a servo its position is about to change
          * @author Rene van Eendenburg
          */
         void notifyChange();
@@ -107,6 +112,7 @@ namespace RobotSimulation {
         bool moving;
         ros::Rate rate;
         static long cmdTime;
+        mutable std::mutex mutexPos;
     };
 }
 

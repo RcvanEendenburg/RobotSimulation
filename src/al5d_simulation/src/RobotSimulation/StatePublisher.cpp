@@ -7,7 +7,7 @@
 
 namespace RobotSimulation {
 
-    StatePublisher::StatePublisher(std::vector<DegreeOfFreedom>& servos) : servos(servos)
+    StatePublisher::StatePublisher(std::vector<std::shared_ptr<DegreeOfFreedom>>& servos) : servos(servos)
     {
 
     }
@@ -21,7 +21,7 @@ namespace RobotSimulation {
         joint_state.velocity.resize(servos.size());
 
         for (uint (i) = 0; (i) < servos.size(); ++(i)) {
-            joint_state.name[i] = servos.at(i).getServoName();
+            joint_state.name[i] = servos.at(i)->getServoName();
         }
         odom_trans.header.frame_id = "odom";
         odom_trans.child_frame_id = joint_state.name[0];
@@ -52,7 +52,7 @@ namespace RobotSimulation {
             odom_trans.transform.translation.z = 0;
             odom_trans.transform.rotation = tf::createQuaternionMsgFromYaw(0);
             for (uint (i) = 0; (i) < servos.size(); ++(i)) {
-                joint_state.position[i] = servos.at(i).getCurrentPos();
+                joint_state.position[i] = servos.at(i)->getCurrentPos();
             }
 
             jointPub.publish(joint_state);

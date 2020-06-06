@@ -68,12 +68,13 @@ namespace RobotSimulation {
 
         while (!updateReceived)// as long we don't receive a new update. stay in this loop.
         {
+            std::unique_lock<std::mutex> lock(mutexPos);
             if (std::fabs(targetPos - currentPos) <= diff) {
                 currentPos = targetPos;
                 break;
             }
-
             currentPos += step;
+            lock.unlock();
             rate.sleep();
         }
         moving = false;
@@ -106,7 +107,8 @@ namespace RobotSimulation {
         servoThread.detach();                                        // detach and let the thread handle itself
     }
 
-    double DegreeOfFreedom::getCurrentPos() const {
+    double DegreeOfFreedom::getCurrentPos() const{
+        std::unique_lock<std::mutex> lock(mutexPos);
         return currentPos;
     }
 
