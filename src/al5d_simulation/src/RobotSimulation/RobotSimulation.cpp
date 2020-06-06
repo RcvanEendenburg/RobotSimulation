@@ -4,22 +4,22 @@
 
 namespace RobotSimulation {
 
-    Al5dSimulation::Al5dSimulation(std::string urdfFile) {
-        model.initParam("al5d/robot_description");
+    Al5dSimulation::Al5dSimulation(std::string modelDataNamespace) {
+        model.initParam(modelDataNamespace);
         std::string ns = "/joint_states";
-        servos.push_back(DegreeOfFreedom(model.getJoint("base_link2turret")));
-        servos.push_back(DegreeOfFreedom(model.getJoint("turret2upperarm")));
-        servos.push_back(DegreeOfFreedom(model.getJoint("upperarm2forearm")));
-        servos.push_back(DegreeOfFreedom(model.getJoint("forearm2wrist")));
-        servos.push_back(DegreeOfFreedom(model.getJoint("wrist2hand")));
-        servos.push_back(DegreeOfFreedom(model.getJoint("gripper_left2hand")));
-        servos.push_back(DegreeOfFreedom(model.getJoint("gripper_right2hand")));
-        statePublisher.Initialize(ns);
-        statePublisher.StartPublishing();
+        servos.push_back(std::make_shared<DegreeOfFreedom>(model.getJoint("base_link2turret")));
+        servos.push_back(std::make_shared<DegreeOfFreedom>(model.getJoint("turret2upperarm")));
+        servos.push_back(std::make_shared<DegreeOfFreedom>(model.getJoint("upperarm2forearm")));
+        servos.push_back(std::make_shared<DegreeOfFreedom>(model.getJoint("forearm2wrist")));
+        servos.push_back(std::make_shared<DegreeOfFreedom>(model.getJoint("wrist2hand")));
+        servos.push_back(std::make_shared<DegreeOfFreedom>(model.getJoint("gripper_left2hand")));
+        servos.push_back(std::make_shared<DegreeOfFreedom>(model.getJoint("gripper_right2hand")));
+        statePublisher->Initialize(ns);
+        statePublisher->StartPublishing();
     }
 
     Al5dSimulation::~Al5dSimulation() {
-        statePublisher.StopPublishing();
+        statePublisher->StopPublishing();
     }
 
     void Al5dSimulation::handleRequest(const std_msgs::String::ConstPtr& msg) {
@@ -84,22 +84,23 @@ namespace RobotSimulation {
 
     double Al5dSimulation::getServoPWM(short servoNr) {
         return toRadian(servoNr,
-                        servos.at(servoNr).getCurrentPos(),
-                        servos.at(servoNr).getMaxRad(),
-                        servos.at(servoNr).getMinRad(),
+                        servos.at(servoNr)->getCurrentPos(),
+                        servos.at(servoNr)->getMaxRad(),
+                        servos.at(servoNr)->getMinRad(),
                         servoMax[servoNr],
                         servoMin[servoNr]);
     }
 
     void Al5dSimulation::moveServo(short aServoNr, double aPwm, double aSpeed) {
-        servos.at(aServoNr).notifyChange();
-        servos.at(aServoNr).setTargetPos(toRadian(aServoNr,
+        servos.at(aServoNr)->notifyChange();
+        servos.at(aServoNr)->setTargetPos(toRadian(aServoNr,
                                                   aPwm,
                                                   servoMax[aServoNr],
                                                   servoMin[aServoNr],
-                                                  servos.at(aServoNr).getMaxRad(),
-                                                  servos.at(aServoNr).getMinRad()));
-        servos.at(aServoNr).setSpeed(speedToRad(aSpeed, aServoNr));
+                                                  servos.at(aServoNr)->getMaxRad(),
+                                                  servos.at(aServoNr)->getMinRad()));
+        servos.at(aServoNr)->setSpeed(speedToRad(aSpeed, aServoNr));
+        servos.at(aServoNr)->startUpdateThread();
     }
 
     double Al5dSimulation::toRadian(short servoNr,
@@ -127,7 +128,7 @@ namespace RobotSimulation {
         if ((int) aSpeed == (int) -1) {
             return -1;
         }
-        double servoRangeRad = std::fabs(servos.at(servoNr).getMinRad() - servos.at(servoNr).getMaxRad());
+        double servoRangeRad = std::fabs(servos.at(servoNr)->getMinRad() - servos.at(servoNr)->getMaxRad());
         double servoRangePWM = std::fabs(servoMin[servoNr] - servoMax[servoNr]);
         return (double) std::fabs(aSpeed * std::fabs(servoRangeRad / (servoRangePWM)));
     }
@@ -135,7 +136,7 @@ namespace RobotSimulation {
     bool Al5dSimulation::armIsMoving() {
         for(auto& servo : servos)
         {
-            if(servo.isMoving())
+            if(servo->isMoving())
                 return true;
         }
         return false;
@@ -144,7 +145,7 @@ namespace RobotSimulation {
     void Al5dSimulation::stop() {
         for(auto& servo : servos)
         {
-            servo.stopMovement();
+            servo->stopMovement();
         }
     }
 }

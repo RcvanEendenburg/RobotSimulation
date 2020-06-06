@@ -13,13 +13,13 @@ namespace RobotSimulation {
 
     class Al5dSimulation {
     public:
-        explicit Al5dSimulation(std::string urdfFile);
+        explicit Al5dSimulation(std::string modelDataNamespace);
 
         virtual ~Al5dSimulation();
 
         void startListening(std::string topicName)
         {
-            n.subscribe(topicName, 1000, &Al5dSimulation::handleRequest, this);
+            sub = n.subscribe(topicName, 1000, &Al5dSimulation::handleRequest, this);
         }
 
         /**
@@ -79,13 +79,13 @@ namespace RobotSimulation {
 
         ros::NodeHandle n;
         ros::Subscriber sub;
-        StatePublisher statePublisher = StatePublisher(servos);
+        std::unique_ptr<StatePublisher> statePublisher = std::make_unique<StatePublisher>(servos);
         const uint16_t servoMin[7] = {2500, 500, 1950, 500, 2650, 2500, 500};
         const uint16_t servoMax[7] = {500, 1950, 500, 2500, 500, 500, 2500};
         const short gripperANr = 5;
         const short gripperBNr = 6;
         urdf::Model model;
-        std::vector<DegreeOfFreedom> servos;
+        std::vector<std::shared_ptr<DegreeOfFreedom>> servos;
     };
 }
 #endif// ROBOT_SIMULATION_HPP_
