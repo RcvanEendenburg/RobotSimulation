@@ -63,6 +63,8 @@ namespace RobotSimulation {
                 {
                     DegreeOfFreedom::setTime(-1);
                     for (auto &singleCommand : servoCommand->commands) {
+                        if(singleCommand.channel == (short)servos.size())
+                            break;
                         if (singleCommand.servoMovementSpeed == (int) NOTSET) {
                             double currentPosPwm = getServoPWM(singleCommand.channel);
                             double change = std::fabs(singleCommand.pulseWidth - currentPosPwm);
@@ -72,6 +74,8 @@ namespace RobotSimulation {
                     }
                 }
                 for (auto const &singleCommand : servoCommand->commands) {
+                    if(singleCommand.channel == (short) servos.size())
+                        break;
                     moveServo(singleCommand.channel, singleCommand.pulseWidth, singleCommand.servoMovementSpeed);
                     if (singleCommand.channel == gripperANr) {
                         moveServo(gripperBNr, singleCommand.pulseWidth, singleCommand.servoMovementSpeed);
