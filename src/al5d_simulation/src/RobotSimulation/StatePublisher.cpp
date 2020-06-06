@@ -24,7 +24,7 @@ namespace RobotSimulation {
             joint_state.name[i] = servos.at(i)->getServoName();
         }
         odom_trans.header.frame_id = "odom";
-        odom_trans.child_frame_id = joint_state.name[0];
+        odom_trans.child_frame_id = "base_link";
     }
 
     void StatePublisher::StatePublisher::StartPublishing()
