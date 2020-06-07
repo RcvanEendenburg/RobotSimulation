@@ -4,13 +4,13 @@
 #include <thread>
 #include <chrono>
 
-Cup::Cup(const std::string& name, unsigned short id, std::tuple<double,double,double> position,
+Cup::Cup(std::string name, unsigned short id, std::tuple<double,double,double> position,
     World& world) :
-listener_(n_), broadcaster_(), name_(name + std::to_string(id)),
+name_(std::move(name)),
 publisher_(n_.advertise<visualization_msgs::Marker>(name_, 1)),
-speed_publisher_(n_.advertise<std_msgs::Float64>(name_ + "_speed", 1)),
-velocity_publisher_(n_.advertise<geometry_msgs::Vector3>(name_ + "_velocity", 1)),
-orientation_publisher_(n_.advertise<geometry_msgs::Quaternion>(name_ + "_orientation", 1)),
+speed_publisher_(n_.advertise<std_msgs::Float64>(name_ + std::to_string(id) + "_speed", 1)),
+velocity_publisher_(n_.advertise<geometry_msgs::Vector3>(name_ + std::to_string(id) + "_velocity", 1)),
+orientation_publisher_(n_.advertise<geometry_msgs::Quaternion>(name_ + std::to_string(id) + "_orientation", 1)),
 state_(State::Ungrabbed), world_(world)
 {
     create(std::move(position), id);
@@ -18,61 +18,54 @@ state_(State::Ungrabbed), world_(world)
 
 void Cup::create(std::tuple<double,double,double> position, unsigned short id)
 {
-    cup_.ns = name_;
-    cup_.id = id;
-    cup_.type = visualization_msgs::Marker::CYLINDER;
+    marker_.ns = name_ + std::to_string(id);
+    marker_.type = visualization_msgs::Marker::CYLINDER;
 
-    cup_.pose.orientation.x = 0.0;
-    cup_.pose.orientation.y = 0.0;
-    cup_.pose.orientation.z = 0.0;
-    cup_.pose.orientation.w = 1.0;
+    marker_.pose.orientation.x = 0.0;
+    marker_.pose.orientation.y = 0.0;
+    marker_.pose.orientation.z = 0.0;
+    marker_.pose.orientation.w = 1.0;
 
-    cup_.scale.x = 0.019;
-    cup_.scale.y = 0.019;
-    cup_.scale.z = 0.05;
+    marker_.scale.x = 0.022;
+    marker_.scale.y = 0.022;
+    marker_.scale.z = 0.05;
 
-    world_.createMarker(cup_, transform_, std::move(position));
-    publisher_.publish(cup_);
-    broadcaster_.sendTransform(transform_);
+    world_.createMarker(marker_, transform_, std::move(position));
+    world_.createRobotSensors();
 }
 
 void Cup::display()
 {
-    cup_.header.stamp = ros::Time::now();
-    transform_.stamp_ = ros::Time::now();
+    double speed = calculateSpeed();
+    publishSpeed(speed);
+    publishVelocity(speed);
+    publishOrientation();
 
-    if(world_.setTransforms(listener_, cup_)) {
-        double speed = calculateSpeed();
-        publishSpeed(speed);
-        publishVelocity(speed);
-        publishOrientation();
-
-        if (world_.robotGrabbedMarker(listener_, cup_))
-            state_ = State::Grabbed;
-        else
-            state_ = State::Ungrabbed;
-        update();
-        setBeginSpeed();
-        setBeginVelocity();
-    }
-    publisher_.publish(cup_);
-    broadcaster_.sendTransform(transform_);
+    if (world_.robotGrabbedMarker(marker_))
+        state_ = State::Grabbed;
+    else
+        state_ = State::Ungrabbed;
+    update();
+    setBeginSpeed();
+    setBeginVelocity();
+    world_.updateRobotSensors();
+    publisher_.publish(marker_);
 }
 
 void Cup::setGrabbedColor()
 {
-    cup_.color.r = 1.0f;
-    cup_.color.g = 0.0f;
-    cup_.color.b = 0.0f;
-    cup_.color.a = 1.0;
+    marker_.color.r = 1.0f;
+    marker_.color.g = 0.0f;
+    marker_.color.b = 0.0f;
+    marker_.color.a = 1.0;
 }
 
 void Cup::setUngrabbedColor()
 {
-    cup_.color.r = 0.0f;
-    cup_.color.g = 1.0f;
-    cup_.color.b = 0.0f;
-    cup_.color.a = 1.0;
+    marker_.color.r = 0.0f;
+    marker_.color.g = 1.0f;
+    marker_.color.b = 0.0f;
+    marker_.color.a = 1.0;
 }
 
 void Cup::update()
@@ -81,18 +74,18 @@ void Cup::update()
     {
     case State::Grabbed:
         setGrabbedColor();
-        world_.followRobot(listener_, transform_, cup_);
+        world_.followRobot(transform_, marker_);
         break;
     case State::Ungrabbed:
         setUngrabbedColor();
-        world_.applyGravity(listener_, transform_, cup_);
+        world_.applyGravity(transform_, marker_);
         break;
     }
 }
 
 void Cup::setBeginSpeed()
 {
-    auto cup_position = world_.getMarkerPosition(cup_);
+    auto cup_position = world_.getMarkerPosition(marker_);
     time_difference_.first = ros::Time::now();
     magnitude_difference_.first = std::sqrt(std::pow(cup_position.x(), 2) + std::pow(cup_position.y(), 2) +
         std::pow(cup_position.z(),2));
@@ -100,12 +93,12 @@ void Cup::setBeginSpeed()
 
 void Cup::setBeginVelocity()
 {
-    position_difference_.first = world_.getMarkerPosition(cup_);
+    position_difference_.first = world_.getMarkerPosition(marker_);
 }
 
 void Cup::publishVelocity(double speed)
 {
-    position_difference_.second = world_.getMarkerPosition(cup_);
+    position_difference_.second = world_.getMarkerPosition(marker_);
     double d_x = position_difference_.second.x() - position_difference_.first.x();
     double d_y = position_difference_.second.y() - position_difference_.first.y();
     double d_z = position_difference_.second.z() - position_difference_.first.z();
@@ -126,7 +119,7 @@ void Cup::publishVelocity(double speed)
 
 void Cup::publishOrientation()
 {
-    auto orientation = world_.getMarkerOrientation(cup_);
+    auto orientation = world_.getMarkerOrientation(marker_);
     geometry_msgs::Quaternion orientation_msg;
     orientation_msg.x = orientation.x();
     orientation_msg.y = orientation.y();
@@ -137,7 +130,7 @@ void Cup::publishOrientation()
 
 double Cup::calculateSpeed()
 {
-    auto cup_position = world_.getMarkerPosition(cup_);
+    auto cup_position = world_.getMarkerPosition(marker_);
     time_difference_.second = ros::Time::now();
     magnitude_difference_.second = std::sqrt(std::pow(cup_position.x(), 2) + std::pow(cup_position.y(), 2) +
         std::pow(cup_position.z(),2));
