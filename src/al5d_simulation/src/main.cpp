@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     const std::string defaultRequestTopic = "SSC32U_request_topic";
     const std::string defaultResponseTopic = "SSC32U_response_topic"; // Wont respond for now
 
-    RobotSimulation::Al5dSimulation al5dSim("al5d/robot_description");
+    robot_simulation::Al5dSimulation al5dSim("al5d/robot_description");
     al5dSim.startListening(defaultRequestTopic);
 
     ros::Rate r(10);

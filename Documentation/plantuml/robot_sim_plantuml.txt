@@ -1,0 +1,71 @@
+@startuml
+
+title robot_simulation
+
+
+class RobotSimulation {
+  +void startListening(string topic_name)
+  +void handleRequest(string message)
+}
+
+class SSC32UCommand
+{
+  {static} +void fromString(string command)
+}
+
+enum SSC32UCommandType
+{
+    SERVO_COMMAND
+    STOP
+    QUERY_MOVEMENT_STATUS
+    QUERY_PULSE_WIDTH
+}
+
+class ServoCommand
+{
+    +long time_
+    +bool time_set_
+}
+
+class SingleServoCommand
+{
+    +short channel_
+    +double pulse_width_
+    +double servo_movement_speed_
+}
+
+class DegreeOfFreedom
+{
+    +void notifyChange()
+    +void startUpdateThread()
+    +void stopMovement()
+    +void setSpeed(double speed)
+    +void setTargetPos(double target_pos)
+    +bool isMoving()
+{static}+ long setTime()
+    -bool useSpeed()
+    -double stepsToTargetTime()
+    -double stepsToTargetSpeed()
+    -void updateServo()
+}
+
+class StatePublisher
+{
+    +void initialize(string ros_namespace)
+    +void startPublishing()
+    +void stopPublishing()
+    -void publish()
+    -ros::Rate rate_;
+}
+
+RobotSimulation -left-> StatePublisher
+SSC32UCommand .> SSC32UCommandType
+ServoCommand *-- "*" SingleServoCommand
+SSC32UCommand <|-down- ServoCommand
+
+RobotSimulation .> SSC32UCommand
+RobotSimulation *-- "*"  DegreeOfFreedom
+
+
+
+@enduml
