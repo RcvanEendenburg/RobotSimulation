@@ -1,7 +1,7 @@
 #include <SSC32UCommand.hpp>
 #include <sstream>
 
-namespace RobotSimulation {
+namespace robot_simulation {
 
     std::string getValue(std::string::iterator &it) {
         std::string value;
@@ -18,56 +18,56 @@ namespace RobotSimulation {
         std::stringstream ss;
         ss << command;
 
-        std::string verifiedCommand;
-        std::getline(ss, verifiedCommand, '\r');
-        verifiedCommand += '\r';
+        std::string verified_command;
+        std::getline(ss, verified_command, '\r');
+        verified_command += '\r';
 
-        auto it = verifiedCommand.begin();
+        auto it = verified_command.begin();
 
         if (command == "STOP\r") {
             SSC32UCommand cmd;
-            cmd.commandType = SSC32UCommandType::STOP;
+            cmd.command_type_ = SSC32UCommandType::STOP;
             return std::make_shared<SSC32UCommand>(cmd);
         } else if (*it == '#') {
-            ServoCommand servoCommand;
-            servoCommand.commandType = SSC32UCommandType::SERVO_COMMAND;
-            servoCommand.timeSet = false;
+            ServoCommand servo_command;
+            servo_command.command_type_ = SSC32UCommandType::SERVO_COMMAND;
+            servo_command.time_set_ = false;
 
             while (true) {
                 switch (*it) {
                     case '#': {
                         SingleServoCommand single_servo_command;
-                        single_servo_command.servoMovementSpeed = -1;
-                        single_servo_command.channel = static_cast<short>((*(++it))++ - '0');
+                        single_servo_command.servo_movement_speed_ = -1;
+                        single_servo_command.channel_ = static_cast<short>((*(++it))++ - '0');
                         ++it;
 
-                        single_servo_command.pulseWidth = (unsigned long) (std::atoi(getValue(it).c_str()));
-                        servoCommand.commands.push_back(single_servo_command);
+                        single_servo_command.pulse_width_ = (unsigned long) (std::atoi(getValue(it).c_str()));
+                        servo_command.commands_.push_back(single_servo_command);
                         break;
                     }
                     case 'T': {
-                        servoCommand.time = (unsigned long long) std::atoi(getValue(it).c_str());
-                        servoCommand.timeSet = true;
+                        servo_command.time_ = (unsigned long long) std::atoi(getValue(it).c_str());
+                        servo_command.time_set_ = true;
                         break;
                     }
                     case 'S': {
-                        servoCommand.commands.back().servoMovementSpeed = (unsigned long) std::atoi(
+                        servo_command.commands_.back().servo_movement_speed_ = (unsigned long) std::atoi(
                                 getValue(it).c_str());
                         break;
                     }
                     case '\r': {
-                        return std::make_shared<ServoCommand>(servoCommand);
+                        return std::make_shared<ServoCommand>(servo_command);
                     }
                 }
             }
         } else {
             if (*it == 'Q' && *(++it) != 'P') {
                 SSC32UCommand cmd;
-                cmd.commandType = SSC32UCommandType::QUERY_MOVEMENT_STATUS;
+                cmd.command_type_ = SSC32UCommandType::QUERY_MOVEMENT_STATUS;
                 return std::make_shared<SSC32UCommand>(cmd);
-            } else if (it != verifiedCommand.end() - 1) {
+            } else if (it != verified_command.end() - 1) {
                 PulseWidthQuery cmd;
-                cmd.commandType = SSC32UCommandType::QUERY_PULSE_WIDTH;
+                cmd.command_type_ = SSC32UCommandType::QUERY_PULSE_WIDTH;
                 cmd.channel = (uint8_t) (std::atoi(getValue(it).c_str()));
                 return std::make_shared<PulseWidthQuery>(cmd);
             }

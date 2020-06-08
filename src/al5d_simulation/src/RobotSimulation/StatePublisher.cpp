@@ -1,63 +1,58 @@
-//
-// Created by rene on 01-06-20.
-//
-
-#include <StatePublisher.h>
+#include <StatePublisher.hpp>
 #include <thread>
 
-namespace RobotSimulation {
+namespace robot_simulation {
 
-    StatePublisher::StatePublisher(std::vector<std::shared_ptr<DegreeOfFreedom>>& servos) : servos(servos)
+    StatePublisher::StatePublisher(std::vector<std::shared_ptr<DegreeOfFreedom>>& servos) : servos_(servos), rate_(10)
     {
 
     }
 
-    void StatePublisher::Initialize(std::string rosNamespace)
+    void StatePublisher::Initialize(std::string ros_namespace)
     {
-        jointPub = n.advertise<sensor_msgs::JointState>(rosNamespace, 100);
+        joint_pub_ = n_.advertise<sensor_msgs::JointState>(ros_namespace, 100);
 
-        joint_state.name.resize(servos.size());
-        joint_state.position.resize(servos.size());
-        joint_state.velocity.resize(servos.size());
+        joint_state_.name.resize(servos_.size());
+        joint_state_.position.resize(servos_.size());
+        joint_state_.velocity.resize(servos_.size());
 
-        for (uint (i) = 0; (i) < servos.size(); ++(i)) {
-            joint_state.name[i] = servos.at(i)->getServoName();
+        for (uint (i) = 0; (i) < servos_.size(); ++(i)) {
+            joint_state_.name[i] = servos_.at(i)->getServoName();
         }
-        odom_trans.header.frame_id = "odom";
-        odom_trans.child_frame_id = "base_link";
+        odom_trans_.header.frame_id = "odom";
+        odom_trans_.child_frame_id = "base_link";
     }
 
     void StatePublisher::StatePublisher::StartPublishing()
     {
-        publishing = true;
+        publishing_ = true;
         std::thread publishThread(&StatePublisher::Publish, this);// create a new thread to update the servo
         publishThread.detach();
     }
 
     void StatePublisher::StopPublishing()
     {
-        publishing = false;
+        publishing_ = false;
     }
 
     void StatePublisher::Publish()
     {
-        ros::Rate r(10);
-        while (ros::ok() && publishing)
+        while (ros::ok() && publishing_)
         {
-            joint_state.header.stamp = ros::Time::now();
+            joint_state_.header.stamp = ros::Time::now();
 
-            odom_trans.header.stamp = ros::Time::now();
-            odom_trans.transform.translation.x = 0;
-            odom_trans.transform.translation.y = 0;
-            odom_trans.transform.translation.z = 0;
-            odom_trans.transform.rotation = tf::createQuaternionMsgFromYaw(0);
-            for (uint (i) = 0; (i) < servos.size(); ++(i)) {
-                joint_state.position[i] = servos.at(i)->getCurrentPos();
+            odom_trans_.header.stamp = ros::Time::now();
+            odom_trans_.transform.translation.x = 0;
+            odom_trans_.transform.translation.y = 0;
+            odom_trans_.transform.translation.z = 0;
+            odom_trans_.transform.rotation = tf::createQuaternionMsgFromYaw(0);
+            for (uint (i) = 0; (i) < servos_.size(); ++(i)) {
+                joint_state_.position[i] = servos_.at(i)->getCurrentPos();
             }
 
-            jointPub.publish(joint_state);
-            broadcaster.sendTransform(odom_trans);
-            r.sleep();
+            joint_pub_.publish(joint_state_);
+            broadcaster_.sendTransform(odom_trans_);
+            rate_.sleep();
         }
     }
 

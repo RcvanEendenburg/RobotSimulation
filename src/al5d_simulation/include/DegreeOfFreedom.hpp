@@ -11,7 +11,7 @@
 #define NOTSET -1
 #define UPDATE_RATE 50// Publish rate of updates in Hz
 
-namespace RobotSimulation {
+namespace robot_simulation {
 /**
  * @brief Each degree of freedom has its own characteristics (such as speed, current position)
  */
@@ -21,14 +21,12 @@ namespace RobotSimulation {
          * @brief Construct a new Degree Of Freedom object
          * @author Rene van Eendenburg
          *
-         * @param jointSharedPtr pointer to the joint in the urdf model
+         * @param joint_shared_ptr pointer to the joint in the urdf model
          * @param aNamespace the robotname namespace
          */
-        DegreeOfFreedom(urdf::JointConstSharedPtr jointSharedPtr);
+        DegreeOfFreedom(urdf::JointConstSharedPtr joint_shared_ptr);
 
         virtual ~DegreeOfFreedom() = default;
-
-     //   DegreeOfFreedom& operator=(const DegreeOfFreedom& s);
 
         /**
          * @brief function that starts the position updating thread
@@ -44,7 +42,7 @@ namespace RobotSimulation {
 
         /**
          * @author Rene van Eendenburg
-         * Function to stop the servo from moving.
+         * Function to stop the servo from moving_.
          */
         void stopMovement();
 
@@ -57,7 +55,7 @@ namespace RobotSimulation {
 
         void setSpeed(double speed);
 
-        void setTargetPos(double targetPos);
+        void setTargetPos(double target_pos);
 
         double getCurrentPos() const;
 
@@ -101,18 +99,18 @@ namespace RobotSimulation {
          */
         void updateServo();
 
-        std::string servoName;
-        double currentPos;
-        double targetPos;
-        double speed;
-        const double maxSpeed;
-        const double minRad;
-        const double maxRad;
-        bool updateReceived;
-        bool moving;
-        ros::Rate rate;
-        static long cmdTime;
-        mutable std::mutex mutexPos;
+        std::string servo_name_;
+        double current_pos_;
+        double target_pos_;
+        double speed_;
+        const double max_speed_;
+        const double min_rad_;
+        const double max_rad_;
+        bool update_received_;
+        bool moving_;
+        ros::Rate rate_;
+        static long cmd_time_;
+        mutable std::mutex mutex_pos_;
     };
 }
 
