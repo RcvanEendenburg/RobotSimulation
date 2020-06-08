@@ -8,7 +8,7 @@ namespace robot_simulation {
 
     }
 
-    void StatePublisher::Initialize(std::string ros_namespace)
+    void StatePublisher::initialize(std::string ros_namespace)
     {
         joint_pub_ = n_.advertise<sensor_msgs::JointState>(ros_namespace, 100);
 
@@ -23,19 +23,19 @@ namespace robot_simulation {
         odom_trans_.child_frame_id = "base_link";
     }
 
-    void StatePublisher::StatePublisher::StartPublishing()
+    void StatePublisher::StatePublisher::startPublishing()
     {
         publishing_ = true;
-        std::thread publishThread(&StatePublisher::Publish, this);// create a new thread to update the servo
+        std::thread publishThread(&StatePublisher::publish, this);// create a new thread to update the servo
         publishThread.detach();
     }
 
-    void StatePublisher::StopPublishing()
+    void StatePublisher::stopPublishing()
     {
         publishing_ = false;
     }
 
-    void StatePublisher::Publish()
+    void StatePublisher::publish()
     {
         while (ros::ok() && publishing_)
         {

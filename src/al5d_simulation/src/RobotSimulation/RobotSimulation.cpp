@@ -14,12 +14,12 @@ namespace robot_simulation {
         servos_.push_back(std::make_shared<DegreeOfFreedom>(model_.getJoint("wrist2hand")));
         servos_.push_back(std::make_shared<DegreeOfFreedom>(model_.getJoint("gripper_left2hand")));
         servos_.push_back(std::make_shared<DegreeOfFreedom>(model_.getJoint("gripper_right2hand")));
-        state_publisher_->Initialize(ns);
-        state_publisher_->StartPublishing();
+        state_publisher_->initialize(ns);
+        state_publisher_->startPublishing();
     }
 
     Al5dSimulation::~Al5dSimulation() {
-        state_publisher_->StopPublishing();
+        state_publisher_->stopPublishing();
     }
 
     void Al5dSimulation::handleRequest(const std_msgs::String::ConstPtr& msg) {

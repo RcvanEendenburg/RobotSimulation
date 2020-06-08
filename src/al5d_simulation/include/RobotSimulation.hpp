@@ -28,7 +28,7 @@ namespace robot_simulation {
          * @param SSC32U request
          */
         void handleRequest(const std_msgs::String::ConstPtr& msg);
-
+    private:
         /**
          * @brief This function maps input_val values to radial based on min and max angle
          * @param servo_id the servo id
@@ -50,7 +50,7 @@ namespace robot_simulation {
          */
         double speedToRad(double speed, short servo_id);
 
-    private:
+
         /**
          * @brief Get the Servo PWM object
          *

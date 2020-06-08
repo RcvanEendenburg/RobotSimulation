@@ -21,20 +21,20 @@ namespace robot_simulation {
         /**
          * @param ros_namespace The namespace the joint_states will be published too
          */
-        void Initialize(std::string ros_namespace);
+        void initialize(std::string ros_namespace);
         /**
          * Calls the function Publish in a new thread
          */
-        void StartPublishing();
+        void startPublishing();
         /**
          * Stop publishing the servo states
          */
-        void StopPublishing();
+        void stopPublishing();
     private:
         /**
          * Looping function that continuously publishes the state of the servos
          */
-        void Publish();
+        void publish();
         std::atomic<bool> publishing_;
         std::vector<std::shared_ptr<DegreeOfFreedom>> &servos_;
         geometry_msgs::TransformStamped odom_trans_;
