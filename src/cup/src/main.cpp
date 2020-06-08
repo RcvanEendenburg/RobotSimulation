@@ -3,7 +3,7 @@
 //
 
 #include <ros/ros.h>
-#include <cup/cup.hpp>
+#include <cup/cup.h>
 
 #include <iostream>
 
@@ -12,18 +12,18 @@ int main(int argc, char** argv)
     try {
         if(argc > 4)
         {
-            std::string node_name("cup");
             std::string id(argv[1]);
-            ros::init(argc, argv, node_name + id);
+            ros::init(argc, argv, "cup" + id);
             Robot robot("/gripper_left", "/gripper_right");
             World world("/odom",0, robot);
-            Cup cup(node_name, static_cast<unsigned short>(std::stoi(id)), std::make_tuple(std::stod(argv[2]),
+            Cup cup(static_cast<unsigned short>(std::stoi(id)), std::make_tuple(std::stod(argv[2]),
                                                                                            std::stod(argv[3]), std::stod(argv[4])), world);
 
             ros::Rate r(20);
             while (ros::ok())
             {
                 cup.display();
+                robot.updateSensors();
                 r.sleep();
             }
         }
