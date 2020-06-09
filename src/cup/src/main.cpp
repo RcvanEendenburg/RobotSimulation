@@ -15,7 +15,7 @@ int main(int argc, char** argv)
             std::string id(argv[1]);
             ros::init(argc, argv, "cup" + id);
             Robot robot("/gripper_left", "/gripper_right");
-            World world("/odom",0.025, robot);
+            World world("/odom",0.055, robot);
             Cup cup(static_cast<unsigned short>(std::stoi(id)), std::make_tuple(std::stod(argv[2]),
                                                                                            std::stod(argv[3]), std::stod(argv[4])), world);
 

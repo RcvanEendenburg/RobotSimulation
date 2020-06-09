@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace RobotSimulation {
+namespace robot_simulation {
 /**
  * @brief this enum class contains all the SS32U Command types that are supported (and can be parsed)
  */
@@ -22,26 +22,26 @@ namespace RobotSimulation {
     struct SSC32UCommand {
         static std::shared_ptr<SSC32UCommand> fromString(const std::string &command);
 
-        SSC32UCommandType commandType;
+        SSC32UCommandType command_type_;
     };
 
 /**
  * @brief a command for a single servo command SSC32U
  */
     struct SingleServoCommand : public SSC32UCommand {
-        short channel;
-        double pulseWidth;
-        double servoMovementSpeed;
+        short channel_;
+        double pulse_width_;
+        double servo_movement_speed_;
     };
 
 /**
  * @brief a command for a SSC32U servocommand (multiple single servo commands)
  */
     struct ServoCommand : public SSC32UCommand {
-        std::vector<SingleServoCommand> commands;
-        unsigned long long time;
+        std::vector<SingleServoCommand> commands_;
+        unsigned long long time_;
 
-        bool timeSet;
+        bool time_set_;
     };
 
 /**

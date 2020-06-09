@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(al5d_simulation)
 
 ## Building with C++ standard 11
-add_definitions(-std=c++11 -Wall -Wextra)
+add_definitions(-std=c++14 -Wall -Wextra)
 
 ## Finding packages
 find_package(catkin REQUIRED COMPONENTS

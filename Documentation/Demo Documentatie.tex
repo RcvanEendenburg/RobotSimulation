@@ -1,0 +1,107 @@
+\documentclass[11pt,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[dutch]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[toc,page]{appendix}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+\usepackage{tikz-qtree}
+\usepackage{graphicx}
+\usepackage{fancyref}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{pdflscape}
+\usepackage{fancyvrb}
+\graphicspath{ {Afbeeldingen/} }
+\usepackage{subfig}
+\usepackage{tabularx}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+%% Sets page size and margins 
+\usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+\author{René van Eendenburg 561378 \cr Derk Wiegerinck 567665}
+
+\title{Demo Documentatie}
+\usepackage{titling}
+
+\newcommand{\subtitle}[3]{%
+	\posttitle{%
+		\par\end{center}
+	\begin{center}\large#1\end{center}
+	\begin{center}\large#2\end{center}
+	\begin{center}\large#3\end{center}
+	\vskip0.5em}%
+}
+
+\subtitle{HAN Arnhem}{Versie 1}{WOR-World}
+
+\frenchspacing
+\sloppy
+\begin{document}
+\maketitle
+
+
+
+\tableofcontents
+\clearpage
+
+
+\section{Inleiding}
+Dit document beschrijft wat er nodig is om een simulatie te kunnen bouwen, het starten van de simulatie en het uitvoeren van een demo.
+
+\section{Benodigdheden}
+Uw Linux distributie zal Robot Operating System (Ros) moeten ondersteunen. Kijk onder deze \href{https://www.ros.org/reps/rep-0003.html}{link} of uw distributie wordt ondersteund.
+
+Verder zijn de volgende onderdelen benodigd om de simulatie te bouwen en uit te voeren
+\begin{itemize}
+    \item \href{http://wiki.ros.org/melodic/Installation}{Ros Melodic}
+    \item GCC 7.4.0 of hoger
+\end{itemize}
+
+\section{Bouwen van de broncode}
+Allereerst zult u een workspace moeten hebben. Dit kunt u doen door de volgende commando' s uit te voeren
+
+\begin{verbatim}
+$ mkdir -p ~/catkin_ws/src
+$ cd ~/catkin_ws/
+$ catkin_make
+$ source /opt/ros/<distro>/setup.bash
+\end{verbatim}
+
+Daarna kunt u de packages in de zojuist aangemaakte src map kopieren. 
+
+\begin{verbatim}
+$ cp /directory/to/RobotSimulation/src/* ~/catkin_ws/src
+$ catkin_make
+$ source devel/setup.bash
+\end{verbatim}
+
+\section{Uitvoeren simulatie}
+Na het bouwen van de broncode, kan de simulatie worden gestart. Hiervoor opent u een terminal in de workspace en voert u de volgende stappen uit.
+
+\begin{verbatim}
+$ cd ~/catkin_ws
+$ source devel/setup.bash
+$ roslaunch al5d_simulation al5d_simulation.launch 
+\end{verbatim}
+
+Dit opent Rviz en zal u de robotarm weergeven. Om vervolgens het Demo script te draaien, opent u nog een terminal.
+
+\begin{verbatim}
+$ cd ~/catkin_ws
+$ source devel/setup.bash
+$ cd ~/catkin_ws/src/al5d_simulation/scripts
+$ ./demo.bash 
+\end{verbatim}
+
+
+\end{document}

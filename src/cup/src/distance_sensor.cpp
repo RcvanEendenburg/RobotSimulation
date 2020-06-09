@@ -27,8 +27,8 @@ bool DistanceSensor::detectedMarker(const Marker::Transformable &marker) const
         double half_height = marker.getMarker().scale.z / 2;
 
         return(std::abs(y) <= radius &&
-            std::abs(z) <= radius &&
-            std::abs(x) <= half_height );
+            std::abs(z) <= radius + 0.005 &&
+            std::abs(x) <= half_height);
     }
     return false;
 }
