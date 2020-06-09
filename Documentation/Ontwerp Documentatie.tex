@@ -22,6 +22,7 @@
 \graphicspath{ {Afbeeldingen/} }
 \usepackage{subfig}
 \usepackage{tabularx}
+\usepackage{parskip}
 
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
@@ -56,25 +57,43 @@
 
 
 \section{Inleiding}
-Dit document bevat het ontwerp van de simulatie opdracht. Hier zal worden ingegaan op de structuur van de packages, samenhang van de broncode en 
+In dit document wordt het ontwerp van de uitwerking van de simulatieopdracht beschreven. Hier zal worden ingegaan op de structuur van de packages, Dit houdt in dat alle nodes, topics en messages worden beschreven. Ook wordt beschreven wat de samenhang is van de broncode. Dit wordt met behulp van class diagrams en beschrijvingen van de classes gedaan. Daarnaast wordt er beschreven hoe het gedrag van de belangrijke componenten gerealiseerd is. Tot slot wordt de API van alle publieke interfaces beschreven.
 
-\section{Structuur}
+\section{Beschrijving van de packages}
+De uitwerking bestaat uit twee ROS-packages: al5d\_simulation en cup. In de volgende paragrafen worden de packages beschreven.
 
 \subsection{al5d\_simulation}
-De al5d\_simulation package bevat een programma die de al5d controller simuleert en de visualisatie van de lynxmotion al5d.\newline 
-\newline
+De al5d\_simulation package bevat een node die de al5d controller simuleert en de visualisatie van de lynxmotion al5d.
+
 De controller accepteert berichten van het \href{https://www.robotshop.com/media/files/pdf2/lynxmotion_ssc-32u_usb_user_guide.pdf
-}{SSC32U} format op een rostopic. Het rostopic, genaamd "SSC32U\_request\_topic", handelt alle mogelijke requests af. Responses zijn op dit moment niet geïmplementeerd omdat dit buiten de scope van de opdracht ligt.\newline
-Bij een request zal de al5d\_simulation de SSC32U requests converteren en vervolgens publiceren op het "joint\_state\_message\_topic". Deze worden op hun beurt weer afgehandeld door de "robot\_state\_publisher". Dit topic zal de robot in de Rviz visualisatie aansturen.
+}{SSC32U}-format op een rostopic. Het rostopic, genaamd "SSC32U\_request\_topic", handelt alle mogelijke requests af. Responses zijn op dit moment niet geïmplementeerd, omdat dit buiten de scope van de opdracht ligt.
+
+Bij een request zal de al5d\_simulation de SSC32U requests converteren en vervolgens publiceren op het "joint\_state\_message\_topic". Deze worden op hun beurt weer afgehandeld door de "robot\_state\_publisher". Dit topic zal de robot in de Rviz-visualisatie aansturen.
 
 \subsection{cup}
-De cup package bevat een programma die bekers kan simuleren. Deze package maakt gebruik aanwezige transforms binnen de simulatie. Dit gebeurd door middel van een TransformListener. Er wordt geluisterd naar de locatie van de grippers om daarmee te bepalen of het bekertje is opgepakt of is losgelaten. Daarnaast kijkt de beker naar zijn eigen locatie of er zwaartekracht uitgeoefend wordt op de beker.
-\newline
-De beker maakt ook gebruik van "visualization msgs" om zichzelf te laten weergeven in de simulatie als een marker. Deze messages worden gepubliceerd op het topic "visualization marker".
-\newline
+De cup package bevat een node die een beker kan simuleren. De cup luistert naar de frames die de al5d\_simulation publiceert. In de volgende sectie wordt uitgelegd wat de relevante frames zijn en waarom.
+
+\subsubsection{Relevante frames}
+De cup maakt gebruik van de door al5d\_simulation gepubliceerde transform-frames van de robot. De belangrijke frames waar de cup geïnteresseerd in is, zijn: ``odom'', ``gripper\_right'' en ``gripper\_left''.
+
+``odom'' is het frame van de simulatie dat altijd vast staat. Met behulp van dit frame, worden de posities van de beker in de gesimuleerde wereld berekend.
+
+De andere twee frames zijn de gripper-frames die worden gebruikt om de positie van de beker ten opzichte van de gripper te bepalen. Ook worden deze frames gebruikt om sensoren aan de gripper te koppelen (dit wordt verderop in het document uitgelegd).
+
+\subsubsection{Verschillende onderdelen van de cup}
+
+De beker bestaat uit een marker en een transform-frame. De marker is een visuele representatie van de beker. Dit bepaalt hoe de beker eruitziet. Aan de hand van het transform-frame wordt bepaalt waar de beker precies is in de gesimuleerde wereld.
+
+Om te bepalen wanneer de beker opgepakt is, zijn er "sensoren" gerealiseerd op de gripper. Dit zijn markers die de positie van de grippers met een bepaalde offset volgen. Als de sensoren de beker detecteren, is de cup opgepakt. Ook zijn er twee sensoren gerealiseerd aan de buitenkant van de grippers. Op deze manier kan de beker verschoven worden. Deze sensoren bepalen uiteindelijk de toestand van de beker. De volgende toestanden zijn mogelijk: opgepakt, niet opgepakt, schuiven naar links en schuiven naar rechts.
+
+Na het bepalen van de toestand, kunnen er een aantal zaken worden gedaan. Als de beker niet opgepakt is, wordt er een zwaartekracht gesimuleerd. Dit zorgt ervoor dat als de positie van de beker boven de grond is, de positie wordt verminderd met een factor totdat de beker de grond heeft bereikt. Als de beker opgepakt is, wordt het transform-frame van de beker gekoppeld aan de gripper, zodat de beker de gripper volgt. Dit wordt ook gedaan in de overige toestanden.
+
+Elke cup publiceert zijn snelheid, versnelling en oriëntatie op topics in de vorm van ``cup'' + id + ``\_'' + (``speed'' / ``velocity'' of ``orientation''). Daarnaast wordt de marker van de cup wordt gepubliceerd zodat deze zichtbaar is in de wereld en het transform-frame wordt gepubliceerd. De cup publiceert ook de sensors (deze bestaan ook uit visuele markers en transform-frames). De markers zijn in de simulatie te zien als ``left\_sensor'', ``right\_sensor'', ``left\_outer\_sensor'' en ``right\_outer\_sensor''. 
+
+\subsubsection{Starten van de cup}
 Om een beker in de simulatie wereld te weergeven, moeten de volgende argumenten worden meegegeven. Een numeriek ID, X locatie, Y locatie en een Z locatie. 
 
-\section{Realisatie}
+\section{Structuur van de packages}
 
 \subsection{al5d\_simulation}
 
