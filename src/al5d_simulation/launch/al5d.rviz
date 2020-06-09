@@ -15,6 +15,8 @@ Panels:
         - /Marker2/Namespaces1
         - /TF1
         - /TF1/Tree1
+        - /Marker3
+        - /Marker4
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -147,6 +149,38 @@ Visualization Manager:
         {}
       Update Interval: 0
       Value: false
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /left_outer_sensor
+      Name: Marker
+      Namespaces:
+        left_outer_sensor: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /left_sensor
+      Name: Marker
+      Namespaces:
+        left_sensor: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /right_outer_sensor
+      Name: Marker
+      Namespaces:
+        right_outer_sensor: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /right_sensor
+      Name: Marker
+      Namespaces:
+        right_sensor: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -175,7 +209,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.2644283771514893
+      Distance: 1.2073131799697876
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -190,10 +224,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.43539899587631226
+      Pitch: 0.2203991562128067
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.5903931260108948
+      Yaw: 5.183605194091797
     Saved: ~
 Window Geometry:
   Displays:
@@ -212,4 +246,4 @@ Window Geometry:
     collapsed: false
   Width: 1200
   X: 605
-  Y: 239
+  Y: 149

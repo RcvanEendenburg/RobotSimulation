@@ -21,6 +21,8 @@ public:
      */
     Transformable(const std::string& name, int type);
 
+    virtual ~Transformable() = default;
+
     /**
      * Gets the position relative to the world frame.
      * @return The world position.
@@ -116,13 +118,6 @@ public:
     void detach();
 
     /**
-     * Checks collision between two markers.
-     * @param transformable The other marker.
-     * @return True if collision is detected.
-     */
-    bool collide(const Transformable& transformable) const;
-
-    /**
      * Gets the z
      * @return
      */
@@ -140,9 +135,13 @@ public:
      */
     bool isAttached() const;
 
+    const visualization_msgs::Marker& getMarker() const;
+
 private:
     ros::NodeHandle node_;
+protected:
     visualization_msgs::Marker marker_;
+private:
     tf::StampedTransform transform_;
     ros::Publisher publisher_;
     bool attached_;

@@ -186,29 +186,9 @@ bool Transformable::isAttached() const
     return attached_;
 }
 
-
-bool Transformable::collide(const Transformable& transformable) const
+const visualization_msgs::Marker& Transformable::getMarker() const
 {
-    const auto &listener = TransformManager::get().getListener();
-    tf::StampedTransform tf;
-    if(listener.canTransform(marker_.ns, transformable.marker_.ns, ros::Time(0)))
-    {
-        listener.lookupTransform(marker_.ns, transformable.marker_.ns, ros::Time(0), tf);
-
-        double x = tf.getOrigin().x();
-        double y = tf.getOrigin().y();
-        double z = tf.getOrigin().z();
-
-        double radius = marker_.scale.x;
-        double height = marker_.scale.z;
-
-        const double error_margin = 0.001;
-
-        return(std::abs(y) <= (radius/2) + error_margin &&
-            z > 0 && z <= radius + error_margin &&
-            x > 0 && x <= (height/2) + error_margin);
-    }
-    return false;
+    return marker_;
 }
 
 }

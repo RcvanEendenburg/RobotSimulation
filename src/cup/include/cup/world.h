@@ -1,8 +1,6 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include <tf/transform_listener.h>
-#include <tf/transform_broadcaster.h>
 #include <cup/robot.h>
 #include <string>
 
@@ -33,6 +31,12 @@ public:
      */
     bool robotGrabbedMarker(const Marker::Transformable& marker) const;
 
+    bool robotPushedMarkerLeft(const Marker::Transformable& marker) const;
+    bool robotPushedMarkerRight(const Marker::Transformable& marker) const;
+
+    void robotPushLeft(Marker::Transformable& marker);
+    void robotPushRight(Marker::Transformable& marker);
+
     /**
      * Let the marker follow the robot.
      * @param marker
@@ -44,12 +48,9 @@ public:
      */
     double getGroundLevel() const;
 private:
-    ros::NodeHandle n_;
     std::string fixed_frame_;
     double ground_level_;
     Robot& robot_;
-    tf::TransformListener listener_;
-    tf::TransformBroadcaster broadcaster_;
 };
 
 

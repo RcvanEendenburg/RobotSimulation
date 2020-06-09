@@ -28,7 +28,8 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
  add_executable(${PROJECT_NAME}_node src/main.cpp src/cup.cpp src/world.cpp src/robot.cpp src/speed.cpp
-         src/transformable.cpp src/velocity.cpp src/orientation.cpp)
+         src/transformable.cpp src/velocity.cpp src/orientation.cpp src/sensor.cpp src/distance_sensor.cpp
+         src/touch_sensor.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
