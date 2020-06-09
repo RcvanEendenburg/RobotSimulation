@@ -2,8 +2,8 @@
 #include <cup/transform_manager.h>
 
 World::World(std::string fixed_frame, double ground_level, Robot &robot)
-    : n_(), fixed_frame_(std::move(fixed_frame)),
-      ground_level_(ground_level), robot_(robot), listener_(n_), broadcaster_()
+    : fixed_frame_(std::move(fixed_frame)),
+      ground_level_(ground_level), robot_(robot)
 {
     TransformManager::get().setFixedFrame(fixed_frame_);
 }

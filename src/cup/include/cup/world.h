@@ -1,8 +1,6 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include <tf/transform_listener.h>
-#include <tf/transform_broadcaster.h>
 #include <cup/robot.h>
 #include <string>
 
@@ -50,12 +48,9 @@ public:
      */
     double getGroundLevel() const;
 private:
-    ros::NodeHandle n_;
     std::string fixed_frame_;
     double ground_level_;
     Robot& robot_;
-    tf::TransformListener listener_;
-    tf::TransformBroadcaster broadcaster_;
 };
 
 
