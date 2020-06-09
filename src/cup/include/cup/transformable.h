@@ -21,6 +21,8 @@ public:
      */
     Transformable(const std::string& name, int type);
 
+    virtual ~Transformable() = default;
+
     /**
      * Gets the position relative to the world frame.
      * @return The world position.
@@ -127,6 +129,7 @@ public:
      * @return
      */
     double getZ() const;
+    double getY() const;
 
     /**
      * Sets the z.
@@ -140,9 +143,13 @@ public:
      */
     bool isAttached() const;
 
+    const visualization_msgs::Marker& getMarker() const;
+
 private:
     ros::NodeHandle node_;
+protected:
     visualization_msgs::Marker marker_;
+private:
     tf::StampedTransform transform_;
     ros::Publisher publisher_;
     bool attached_;

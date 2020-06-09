@@ -33,6 +33,12 @@ public:
      */
     bool robotGrabbedMarker(const Marker::Transformable& marker) const;
 
+    bool robotPushedMarkerLeft(const Marker::Transformable& marker) const;
+    bool robotPushedMarkerRight(const Marker::Transformable& marker) const;
+
+    void robotPushLeft(Marker::Transformable& marker);
+    void robotPushRight(Marker::Transformable& marker);
+
     /**
      * Let the marker follow the robot.
      * @param marker

@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-#include <cup/transformable.h>
+#include <cup/touch_sensor.h>
+#include <cup/distance_sensor.h>
 
 class Robot
 {
@@ -28,6 +29,12 @@ public:
      */
     bool grabbedMarker(const Marker::Transformable& marker) const;
 
+    bool pushedMarkerLeft(const Marker::Transformable& marker) const;
+    bool pushedMarkerRight(const Marker::Transformable& marker) const;
+
+    void pushLeft(Marker::Transformable& marker);
+    void pushRight(Marker::Transformable& marker);
+
     /**
      * Let the marker follow the gripper by attaching it to the gripper.
      * @param marker The marker.
@@ -42,8 +49,10 @@ private:
     ros::NodeHandle n_;
     std::string gripper_left_;
     std::string gripper_right_;
-    Marker::Transformable left_sensor_;
-    Marker::Transformable right_sensor_;
+    Sensor::DistanceSensor left_sensor_;
+    Sensor::DistanceSensor right_sensor_;
+    Sensor::TouchSensor left_outer_sensor_;
+    Sensor::TouchSensor right_outer_sensor_;
 };
 
 

@@ -29,6 +29,10 @@ void Cup::display()
 
     if (world_.robotGrabbedMarker(marker_))
         state_ = State::Grabbed;
+    else if(world_.robotPushedMarkerLeft(marker_))
+        state_ = State::PushedLeft;
+    else if(world_.robotPushedMarkerRight(marker_))
+        state_ = State::PushedRight;
     else
         state_ = State::Ungrabbed;
     update();
@@ -49,6 +53,14 @@ void Cup::update()
     case State::Ungrabbed:
         marker_.setColor(0, 1, 0);
         world_.applyGravity(marker_);
+        break;
+    case State::PushedLeft:
+        marker_.setColor(0,0,1);
+        world_.robotPushLeft(marker_);
+        break;
+    case State::PushedRight:
+        marker_.setColor(0,0,1);
+        world_.robotPushRight(marker_);
         break;
     }
 }

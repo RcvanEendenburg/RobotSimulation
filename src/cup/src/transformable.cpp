@@ -102,6 +102,12 @@ double Transformable::getZ() const
     return getPosition().z();
 }
 
+double Transformable::getY() const
+{
+    return getPosition().y();
+}
+
+
 void Transformable::setZ(double z)
 {
     auto position = getWorldPosition();
@@ -199,16 +205,20 @@ bool Transformable::collide(const Transformable& transformable) const
         double y = tf.getOrigin().y();
         double z = tf.getOrigin().z();
 
-        double radius = marker_.scale.x;
-        double height = marker_.scale.z;
+        double radius = marker_.scale.x / 2;
+        double sensor_radius = transformable.marker_.scale.x / 2;
+        double half_height = marker_.scale.z / 2;
 
-        const double error_margin = 0.001;
-
-        return(std::abs(y) <= (radius/2) + error_margin &&
-            z > 0 && z <= radius + error_margin &&
-            x > 0 && x <= (height/2) + error_margin);
+        return(std::abs(y) <= radius &&
+            std::abs(z) <= radius &&
+            std::abs(x) <= half_height );
     }
     return false;
+}
+
+const visualization_msgs::Marker& Transformable::getMarker() const
+{
+    return marker_;
 }
 
 }

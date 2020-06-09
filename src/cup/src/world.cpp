@@ -8,14 +8,12 @@ World::World(std::string fixed_frame, double ground_level, Robot &robot)
     TransformManager::get().setFixedFrame(fixed_frame_);
 }
 
-double
-World::getGroundLevel() const
+double World::getGroundLevel() const
 {
     return ground_level_;
 }
 
-void
-World::applyGravity(Marker::Transformable &marker)
+void World::applyGravity(Marker::Transformable &marker)
 {
     if (marker.available())
     {
@@ -56,6 +54,28 @@ World::applyGravity(Marker::Transformable &marker)
 bool World::robotGrabbedMarker(const Marker::Transformable &marker) const
 {
     return robot_.grabbedMarker(marker);
+}
+
+bool World::robotPushedMarkerLeft(const Marker::Transformable& marker) const
+{
+    return robot_.pushedMarkerLeft(marker);
+}
+
+bool World::robotPushedMarkerRight(const Marker::Transformable& marker) const
+{
+    return robot_.pushedMarkerRight(marker);
+}
+
+void World::robotPushLeft(Marker::Transformable &marker)
+{
+    robot_.pushLeft(marker);
+    marker.sendUpdate();
+}
+
+void World::robotPushRight(Marker::Transformable &marker)
+{
+    robot_.pushRight(marker);
+    marker.sendUpdate();
 }
 
 void World::followRobot(Marker::Transformable &marker)

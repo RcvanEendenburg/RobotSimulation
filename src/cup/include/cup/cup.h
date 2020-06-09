@@ -17,7 +17,9 @@ class Cup
     enum class State
     {
         Grabbed,
-        Ungrabbed
+        Ungrabbed,
+        PushedLeft,
+        PushedRight,
     };
 
 public:
