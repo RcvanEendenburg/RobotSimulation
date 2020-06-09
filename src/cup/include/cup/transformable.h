@@ -118,18 +118,10 @@ public:
     void detach();
 
     /**
-     * Checks collision between two markers.
-     * @param transformable The other marker.
-     * @return True if collision is detected.
-     */
-    bool collide(const Transformable& transformable) const;
-
-    /**
      * Gets the z
      * @return
      */
     double getZ() const;
-    double getY() const;
 
     /**
      * Sets the z.

@@ -102,12 +102,6 @@ double Transformable::getZ() const
     return getPosition().z();
 }
 
-double Transformable::getY() const
-{
-    return getPosition().y();
-}
-
-
 void Transformable::setZ(double z)
 {
     auto position = getWorldPosition();
@@ -190,30 +184,6 @@ void Transformable::detach()
 bool Transformable::isAttached() const
 {
     return attached_;
-}
-
-
-bool Transformable::collide(const Transformable& transformable) const
-{
-    const auto &listener = TransformManager::get().getListener();
-    tf::StampedTransform tf;
-    if(listener.canTransform(marker_.ns, transformable.marker_.ns, ros::Time(0)))
-    {
-        listener.lookupTransform(marker_.ns, transformable.marker_.ns, ros::Time(0), tf);
-
-        double x = tf.getOrigin().x();
-        double y = tf.getOrigin().y();
-        double z = tf.getOrigin().z();
-
-        double radius = marker_.scale.x / 2;
-        double sensor_radius = transformable.marker_.scale.x / 2;
-        double half_height = marker_.scale.z / 2;
-
-        return(std::abs(y) <= radius &&
-            std::abs(z) <= radius &&
-            std::abs(x) <= half_height );
-    }
-    return false;
 }
 
 const visualization_msgs::Marker& Transformable::getMarker() const
