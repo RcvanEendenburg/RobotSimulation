@@ -94,14 +94,44 @@ $ source devel/setup.bash
 $ roslaunch al5d_simulation al5d_simulation.launch 
 \end{verbatim}
 
-Dit opent Rviz en zal u de robotarm weergeven. Om vervolgens het Demo script te draaien, opent u nog een terminal.
+In deze demo is te zien hoe de beker wordt opgepakt. Daarna wordt de beker naar een nieuwe locatie gebracht en neergezet. Daarna zal de beker weer opgepakt worden en de robot de beker weer meenemen. Om te laten zien dat zwaartekracht ook werkt, wordt de beker losgelaten. Dit zorgt er wel voor dat de demo maar eenmaling kan worden uitgevoerd. Mocht deze nog een keer afgespeeld worden, moet de roslaunch en het demo script opnieuw worden gestart.
+\newline
+Daarnaast is het mogelijk om de bekerpositie aan te passen in de launch file. Zie hiervoor de Cup1Pos argument.
 
-\begin{verbatim}
-$ cd ~/catkin_ws
-$ source devel/setup.bash
-$ cd ~/catkin_ws/src/al5d_simulation/scripts
-$ ./demo.bash 
-\end{verbatim}
+\section{Behaalde Eisen}
+\begin{table}[H]
+\centering
+\begin{tabular}[H]{|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0}
+Criteria        &   Aangetoond door:                                                        \\ \hline
+PA01-04         &   Alle code is opgebouwd volgens de ROS structuur en style guide.         \\ 
+                &   Verder zijn alle onderdelen OO opgebouwd                                \\ \hline
+VS01-03         &   SSC32U berichten worden gestuurd naar het request topic en afgehandeld. \\   
+                &   Dit is zichtbaar in Rviz dankzij de bewegende robot arm.                \\ \hline
+VS04            &   De vertraging commando's per servo of globaal met tijd worden gebruikt  \\ 
+                &   in de Demo en worden realistisch afgehandeld.                           \\ \hline
+VC01            &   De beker kan op een willekeurige positie worden gezet in de launchfile  \\ \hline
+VC03            &   Beker is zichtbaar gemaakt d.m.v. een marker                            \\ \hline
+VC04-05         &   De relevante punten van de gripper worden aangeduid met een rode marker \\ \hline
+VC06-07         &   De beker marker veranderd van kleur wanneer opgepakt.                   \\ \hline
+VC08            &   Zie demo                                                                \\ \hline
+VC09-12         &   Alle relevante beker informatie is uit te lezen met rqt\_plot.           \\ 
+                &   Lees met rqt\_plot het cup1 topic uit of zie figuur 1                    \\ \hline
+VC13            &   Zie demo                                                                \\ \hline
+DI01            &   Alle relevante onderdelen worden opgestart met de launchfile            \\ \hline
+DI02            &   De bekerpositie is configurabel in de launchfile                        \\ \hline
+DI04            &   Demoscript stuurt verschillende commando's met delays naar de demo      \\ \hline
 
+\end{tabular}
+\caption{Eisen}
+\end{table}
+
+\begin{figure}[H]
+\centering
+    \includegraphics[scale = .4]{rqt_plot.png}
+    \caption{rqt\_plot van een gesimuleerde beker}
+    \label{figure:al5d_simulation}
+\end{figure}
 
 \end{document}
